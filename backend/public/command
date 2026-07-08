@@ -1,0 +1,28 @@
+ffmpeg -i big_buck_bunny.mp4 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
+  -filter_complex \
+  "[0:v]split=5[v1][v2][v3][v4][v5]; \
+   [v1]scale=w=256:h=144[v1out]; \
+   [v2]scale=w=640:h=360[v2out]; \
+   [v3]scale=w=854:h=480[v3out]; \
+   [v4]scale=w=1280:h=720[v4out]; \
+   [v5]scale=w=1920:h=1080[v5out]" \
+  -map "[v1out]" -map 1:a \
+  -map "[v2out]" -map 1:a \
+  -map "[v3out]" -map 1:a \
+  -map "[v4out]" -map 1:a \
+  -map "[v5out]" -map 1:a \
+  -c:v libx264 -c:a aac -b:a 128k \
+  -b:v:0 400k   -maxrate:v:0 440k   -bufsize:v:0 800k \
+  -b:v:1 800k   -maxrate:v:1 880k   -bufsize:v:1 1600k \
+  -b:v:2 1400k  -maxrate:v:2 1540k  -bufsize:v:2 2800k \
+  -b:v:3 2800k  -maxrate:v:3 3080k  -bufsize:v:3 5600k \
+  -b:v:4 5000k  -maxrate:v:4 5500k  -bufsize:v:4 10000k \
+  -g 48 -keyint_min 48 -sc_threshold 0 \
+  -shortest \
+  -f hls \
+  -hls_time 4 \
+  -hls_playlist_type vod \
+  -hls_segment_filename "stream_%v/data%03d.ts" \
+  -master_pl_name master.m3u8 \
+  -var_stream_map "v:0,a:0,name:144p v:1,a:1,name:360p v:2,a:2,name:480p v:3,a:3,name:720p v:4,a:4,name:1080p" \
+  stream_%v/playlist.m3u8
