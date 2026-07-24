@@ -53,7 +53,7 @@ export const Home = () => {
                     <tbody>
                         {users.map((user) => (
                         <tr key= {user.UserId}>
-                            <td className="border p-2  border-gray-200">{user.UserName}</td> 
+                            <td className="border p-2  border-gray-200">{user.FullName}</td> 
                             <td className="border p-2  border-gray-200">{user.Role}</td>
                             <td className="border p-2  border-gray-200">{user.UserEmail || '-'}</td>
                             <td className="border p-2  border-gray-200">{user.Phone || '-'} </td>

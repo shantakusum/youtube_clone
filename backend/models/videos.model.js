@@ -14,6 +14,14 @@ module.exports = (sequelize, DataTypes)=>{
             allowNull : false,
             required: true
         },
+        VideoType: {
+            type : DataTypes.STRING,
+            field: 'VideoType',
+            enum : ['vod','live'],
+            default : 'vod',
+            allowNull : true,
+            required: false,
+        },
         Description: {
             type: DataTypes.STRING,
             field: 'Description',
@@ -36,21 +44,16 @@ module.exports = (sequelize, DataTypes)=>{
             allowNull: true,
             required: false
         },
-        Category_id: {
-            type: DataTypes.STRING,
-            field: 'Category_id',
-            allowNull: true,
-            required: false
-        },
         Uploaded_by: {
             type: DataTypes.STRING,
             field: 'Uploaded_by',
             required: false
         },
         Views: {
-            type : DataTypes.STRING,
-            required: false,
-            field: 'Views'
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+            field: "Views"
         },
         CreatedAt: {
             type: DataTypes.DATE,
@@ -68,6 +71,7 @@ module.exports = (sequelize, DataTypes)=>{
         updatedAt: 'UpdatedAt',
         freezeTableName: false
     });
+    
     Video.associate = function(models) {
         models.Video.hasMany(models.Comment,{
             onDelete: 'CASCADE',
@@ -75,6 +79,10 @@ module.exports = (sequelize, DataTypes)=>{
 			foreignKey: 'VideoId',
 			constraints: false
         })
+        models.Video.belongsToMany(models.Category, {
+			through: models.VideoCategory,
+			foreignKey:"VideoId"
+		});
     }
     return Video;
 }

@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes)=>{
             type: DataTypes.STRING,
             allowNull: false
         },
+        UserName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
 
         ParentCommentId: {
             type: DataTypes.STRING,
@@ -27,6 +31,14 @@ module.exports = (sequelize, DataTypes)=>{
         Comment: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        Likes: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
+        Dislikes: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         },
         CreatedAt: {
             type: DataTypes.DATE,

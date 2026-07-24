@@ -1,29 +1,37 @@
-import React from 'react'
-//import { CommentInput } from './CommentInput'
-import { CommentSection } from 'react-comments-section';
-import 'react-comments-section/dist/index.css';
+import React, {useState, useEffect} from 'react'
+import { CommentInput } from './CommentInput';
+import { CommentList } from './CommentList';
+import axios from 'axios';
 
-export const CommentSection = () => {
+export const CommentSection = ({videoId}) => {
+    // console.log(videoId)
+    const [comment, setComment] = useState([]);
+    useEffect(() => {
+        if (videoId) {
+            getComments();
+        }
+    }, [videoId]);
+    const getComments = async () => {
+        try {
+            const response = await axios.get(
+                `http://localhost:5000/v1/comments/${videoId}`
+            );
+            // console.log(response.data.Comments);
+            setComment(response.data.Comments);
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    };
   return (
     <>
-        <CommentSection   
-                currentUser={{ 
-                    currentUserId: '',
-                    currentUserImg: '',
-                    currentUserProfile: '',
-                    currentUserFullName: ''
-                }}
-                commentData={data}
-                logIn={{
-                    loginLink: '/login',
-                    signupLink: '/signup'
-                }}
-                onSubmitAction={(data) => console.log('Comment submitted:', data)}
-                onDeleteAction={(data) => console.log('Comment deleted:', data)}
-                onEditAction={(data) => console.log('Comment edited:', data)}
-                onReplyAction={(data) => console.log('Reply submitted:', data)}
-        />
-
+        <div>
+            <CommentInput VideoID= {videoId} parentCommentID={null} getComment={getComments} />
+        </div>
+        <div className="mb-7">
+            <CommentList VideoID= {videoId} getComment={getComments} comments={comment} />
+        </div>
     </>
   )
 }

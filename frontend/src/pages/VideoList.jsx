@@ -21,7 +21,7 @@ export const VideoList = () => {
     
   return (
     <>
-        <div  className="m-9 flex flex-wrap">
+        <div  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4  gap-7">
             {video.map((item) => 
                 <VideoCard key={item.VideoId} video={item} />
              )}

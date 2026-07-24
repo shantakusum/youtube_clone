@@ -26,3 +26,55 @@ ffmpeg -i big_buck_bunny.mp4 -f lavfi -i anullsrc=channel_layout=stereo:sample_r
   -master_pl_name master.m3u8 \
   -var_stream_map "v:0,a:0,name:144p v:1,a:1,name:360p v:2,a:2,name:480p v:3,a:3,name:720p v:4,a:4,name:1080p" \
   stream_%v/playlist.m3u8
+
+
+// type event (all)
+ffmpeg -f dshow -vcodec yuyv422 -video_size 1280x720 -framerate 30 -rtbufsize 200M -i video="HD User Facing" \
+-filter_complex "[v:0]split=4[v1][v2][v3][v4]; \
+                [v1]copy[out720]; \
+                [v2]scale=854:480[out480]; \
+                [v3]scale=640:360[out360]; \
+                [v4]scale=256:144[out144]" \
+-map "[out720]"  -c:v:0 libx264 -preset veryfast -g 60 -sc_threshold 0 -b:v:0 3000k \
+-map "[out480]"  -c:v:1 libx264 -preset veryfast -g 60 -sc_threshold 0 -b:v:1 1500k \
+-map "[out360]"  -c:v:2 libx264 -preset veryfast -g 60 -sc_threshold 0 -b:v:2 800k \
+-map "[out144]"  -c:v:3 libx264 -preset veryfast -g 60 -sc_threshold 0 -b:v:3 300k \
+-f hls -hls_time 2 -hls_playlist_type event \
+-master_pl_name master.m3u8 stream_%v.m3u8
+
+// type none (list size 5)
+ffmpeg -f dshow -thread_queue_size 1024 -vcodec mjpeg -video_size 1280x720 -framerate 30 -rtbufsize 500M -i video="HD User Facing" \
+-filter_complex "[v:0]split=4[v1][v2][v3][v4]; \
+                [v1]copy[out720]; \
+                [v2]scale=854:480[out480]; \
+                [v3]scale=640:360[out360]; \
+                [v4]scale=256:144[out144]" \
+-map "[out720]"  -c:v:0 libx264 -preset ultrafast -g 60 -sc_threshold 0 -b:v:0 3000k -max_delay 500000 \
+-map "[out480]"  -c:v:1 libx264 -preset ultrafast -g 60 -sc_threshold 0 -b:v:1 1500k -max_delay 500000 \
+-map "[out360]"  -c:v:2 libx264 -preset ultrafast -g 60 -sc_threshold 0 -b:v:2 800k -max_delay 500000 \
+-map "[out144]"  -c:v:3 libx264 -preset ultrafast -g 60 -sc_threshold 0 -b:v:3 300k -max_delay 500000 \
+-f hls -hls_time 2 -hls_playlist_type none -hls_list_size 5 -hls_flags delete_segments \
+-master_pl_name master.m3u8 stream_%v.m3u8
+
+
+/// in diffrent folder
+ffmpeg -f dshow -thread_queue_size 1024 -vcodec mjpeg -video_size 1280x720 -framerate 30 -rtbufsize 500M -i video="HD User Facing" \
+-filter_complex "[v:0]split=4[v1][v2][v3][v4]; \
+                [v1]copy[out720]; \
+                [v2]scale=854:480[out480]; \
+                [v3]scale=640:360[out360]; \
+                [v4]scale=256:144[out144]" \
+-map "[out720]"  -c:v:0 libx264 -preset ultrafast -g 60 -sc_threshold 0 -b:v:0 3000k -max_delay 500000 \
+-map "[out480]"  -c:v:1 libx264 -preset ultrafast -g 60 -sc_threshold 0 -b:v:1 1500k -max_delay 500000 \
+-map "[out360]"  -c:v:2 libx264 -preset ultrafast -g 60 -sc_threshold 0 -b:v:2 800k -max_delay 500000 \
+-map "[out144]"  -c:v:3 libx264 -preset ultrafast -g 60 -sc_threshold 0 -b:v:3 300k -max_delay 500000 \
+-f hls -hls_time 2 -hls_playlist_type none -hls_list_size 5 -hls_flags delete_segments \
+-var_stream_map "v:0,name:720p v:1,name:480p v:2,name:360p v:3,name:144p" \
+-master_pl_name master.m3u8 %v/stream.m3u8
+
+
+
+
+
+// sprite
+$ ffmpeg -i 1783976593292-478082660.MP4 -vf "fps=1/5,scale=160:90,tile=10x10" -an -vsync vfr sprite.jpg

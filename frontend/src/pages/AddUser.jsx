@@ -7,6 +7,7 @@
         const {id} = useParams();
         console.log("id =", id);
         const[FormData, setFormData] = useState({
+            FullName:"",
             UserName:"",
             Phone:"",
             UserEmail:"",
@@ -16,7 +17,8 @@
             console.log(e)
             console.log(e.target)    //input field jis field me data fill karege <input value="" /> input field hit krne pe
             setFormData({
-                ...FormData, [e.target.name]: e.target.value
+                ...FormData,
+                [e.target.name]: e.target.value
             });
         };
         useEffect(() => {
@@ -75,6 +77,7 @@
             console.log(response.data);
 
             setFormData({
+            FullName: "",
             UserName: "",
             Phone: "",
             UserEmail: "",
@@ -86,19 +89,48 @@
         }
         };
         return (
-            <div className="flex justify-center mt-10">
-                <div>
-                    <h1 className="text-2xl font-bold mb-4">
+            <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+                    <h1 className="text-2xl font-bold text-center mb-6">
                         {id ? "Update User" : "Add User"}
                     </h1>
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-80 ">
-                        <input type="text" name="UserName" value={FormData.UserName} onChange={handleChange}  placeholder="Enter Name" className="border p-2"/> 
-                        <input  type="number" name="Phone" value={FormData.Phone} onChange={handleChange}  placeholder="Phone Number"  className="border p-2" />                                     
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Full Name
+                            </label>
+                            <input type="text" name="FullName" value={FormData.FullName} onChange={handleChange}  placeholder="Enter Full Name" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-fuchsia-300"/>
+                        </div>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Full Name
+                            </label>
+                            <input type="text" name="UserName" value={FormData.UserName} onChange={handleChange}  placeholder="@username" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-fuchsia-300"/> 
+                        
+                        </div>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Full Name
+                            </label>
+                            <input  type="number" name="Phone" value={FormData.Phone} onChange={handleChange}  placeholder="Phone Number"  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-fuchsia-300" />
+                         
+                        </div>
+                         <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Full Name
+                            </label>
+                            <input  type="email" name="UserEmail" value={FormData.UserEmail} onChange={handleChange} placeholder="Enter Email" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-fuchsia-300"/>
+                         
+                        </div>                                     
                                                                                                                                                                   
-                        <input  type="email" name="UserEmail" value={FormData.UserEmail} onChange={handleChange} placeholder="Enter Email" className="border p-2"/>
-                        <input type="password" name="Password" value={FormData.Password} onChange={handleChange}  placeholder="Enter Password" className="border p-2"/> 
-
-                        <button  type="submit" className="bg-black text-white p-2"> {id ? "Update" : "Submit"}</button>
+                         <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Full Name
+                            </label>
+                             <input type="password" name="Password" value={FormData.Password} onChange={handleChange}  placeholder="Enter Password" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-fuchsia-300"/>
+                        </div>
+                       
+                        <button  type="submit" className="w-full bg-fuchsia-500 text-white py-2 rounded-md hover:bg-fuchsia-500 transition"> {id ? "Update" : "Submit"}</button>
                     </form> 
                 </div>
             </div>

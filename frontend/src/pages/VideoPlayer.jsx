@@ -6,6 +6,8 @@ import axios from 'axios'
 
 import {SuggestedListCard} from '../component/SuggestedListCard'
 import { VideoPlayerComponent } from '../component/VideoPlayerComponent';
+import { VideoPlayerLiveComponent } from '../component/VideoPlayerLiveComponent';
+import { VideoPlayerHlsComponent } from '../component/VideoPlayerHlsComponent';
 import { CommentSection } from '../component/CommentSection';
 
 // (?.) its called optional chaining  ye nested object ki value ko saftely access krta hai.
@@ -17,6 +19,37 @@ import { CommentSection } from '../component/CommentSection';
 export const VideoPlayer = () => {
 const location = useLocation();
 const playVideoCard = location.state?.video;   // video come from state={{video}} which is in VideoCard here {{video} ye object hi}
+//playVideoCard me data kuch is type se  aayega (getVideo API) se data aayega
+// [
+//     {
+//         VideoId: "1",
+//         Title: "React Tutorial",
+//         Description: "Learn React",
+
+//         Categories: [
+//             {
+//                 CategoryId: "A",
+//                 Category_Name: "React"
+//             },
+//             {
+//                 CategoryId: "B",
+//                 Category_Name: "JavaScript"
+//             }
+//         ]
+//     },
+
+//     {
+//         VideoId: "2",
+//         Title: "Node Tutorial",
+
+//         Categories: [
+//             {
+//                 CategoryId: "C",
+//                 Category_Name: "Node"
+//             }
+//         ]
+//     }
+// ]
 
 const [listVideo, setListVideo] = useState([]);
 useEffect(() => {
@@ -33,51 +66,57 @@ const getListVideo = async () => {
         console.log(error)
     }
 }
+const v = (playVideoCard.Video_url.split('.')).reverse()
   return (
     <>
-        <div className="flex flex-row">
-            <div>
-                <div className='m-5 w-350 h-175'>
-                    <VideoPlayerComponent card={playVideoCard} />
+        <div className="grid grid-flow-col grid-cols-12 gap-2">
+            <div className='col-span-9'>
+                <div className='m-4'>
+                    {playVideoCard.VideoType === 'live' ? <VideoPlayerLiveComponent card={playVideoCard} /> : 
+                     v[0]=== 'm3u8' ? <VideoPlayerHlsComponent card={playVideoCard}/> : <VideoPlayerComponent card={playVideoCard} />}
                 </div>
-                <div className="mt-6">
+                <div className="m-4">
                     <h1 className="text-3xl font-bold">
                         {playVideoCard.Title}   
                     </h1>
-                    <div className="flex items-center gap-4 mt-3 text-gray-500">
+                    <div className="mt-4 flex items-center gap-4 text-gray-500">
 
-                        <span>👁 25K Views</span>
+                        <span>👁 {playVideoCard.Views} Views</span>
 
-                        <span>⏱ Duration</span>
+                        <span>⏱ Like</span>
 
-                        <span>📂 Movies</span>
+                        <span>⏱  Duration </span>
 
                     </div>
-                    <div className="mt-5 p-5 rounded-xl bg-gray-100">
+                    <div className="mt-4 flex items-center gap-4 text-gray-500">
+                        {playVideoCard?.Categories.map((item)=>
+                            <span key={item.CategoryId}>#{item.Category_Name}</span>
+                        )}
+                    </div>
+                    <div className="mt-4">
 
-                        <h2 className="font-semibold text-lg mb-2">
+                        <h2 className="font-semibold text-lg mb-4">
                             Description
                         </h2>
 
-                        <p className="text-gray-700 leading-7 line-clamp-1">
+                        <p className="p-4 h-14 text-gray-700 leading-7 line-clamp-1 rounded-xl bg-gray-100">
                             {playVideoCard.Description}
                         </p>
 
                     </div>
-                    <div className="mt-6">
-                        <CommentSection />
+                    <div className="mt-4">
+                        <CommentSection videoId= {playVideoCard.VideoId} />
                     </div>
                 </div>
             </div>  
-            {/*left side suggested list item */}
-            <div className="m-5 w-110 flex flex-col gap-5">
-                        
-                {listVideo.map((item) => 
-                    <div className="w-full" key={item.VideoId}>
-                        <SuggestedListCard key={item.VideoId} listVideo= {item} />
-                    </div>
-                )}
-                
+            <div className="col-span-3">
+                <div className='m-4 flex flex-col gap-4'>
+                    {listVideo.map((item) => 
+                        <div className="w-full" key={item.VideoId}>
+                            <SuggestedListCard key={item.VideoId} listVideo= {item} />
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     </>

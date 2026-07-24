@@ -10,7 +10,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME,pro
         host: process.env.DB_HOST,
         port: Number(process.env.DB_PORT),
         dialect: process.env.DB_DIALECT,
-        logging: console.log,
+        logging: false,
         pool: {
             "max": 10,
             "min": 0,
@@ -40,7 +40,7 @@ db.Sequelize = Sequelize;
 
 try {
   sequelize.authenticate();
-  // sequelize.sync()
+  sequelize.sync()
   console.log('Connection has been established successfully.');
 } catch (error) {
   console.error('Unable to connect to the database:', error);

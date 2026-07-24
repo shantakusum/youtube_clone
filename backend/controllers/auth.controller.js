@@ -4,13 +4,14 @@ const jwt = require("jsonwebtoken")
 module.exports =  {
         register: async(req, res) => {
             try{
-                const{ UserName, UserEmail, Password, Phone, Dob, Role } = req.body;
+                const{ FullName, UserName, UserEmail, Password, Phone, Dob, Role } = req.body;
                 const hashedPassword = await bcrypt.hash(Password, 10);
-                const user = await db.User.create({                  // database me new record create krta hai ek object return krta hai 
+                const user = await db.User.create({  
+                    FullName,                // database me new record create krta hai ek object return krta hai 
                     UserName,
-                    UserEmail,
-                    Password: hashedPassword,
-                    Phone,
+                    UserEmail, 
+                    Password: hashedPassword, 
+                    Phone, 
                     Dob,
                     Role
                 });
@@ -62,5 +63,31 @@ module.exports =  {
                     message: error
                 })
             }
-        }
+        },
+        checkEmail: async(req, res) => {
+                try {
+                const { UserEmail } = req.body;
+        
+                const user = await db.User.findOne({
+                    where: {
+                        UserEmail: UserEmail
+                    }
+                });
+                 console.log("USER:", user);
+                if (!user) {
+                    return res.status(404).json({
+                        message: "Email does not exist"
+                    });
+                }
+                return res.status(200).json({
+                    message: "Email exists"
+                });
+        
+            } catch (error) {
+                console.log(error);
+                return res.status(500).json({
+                    message: "Server error"
+                });
+            }
+         }
 }
