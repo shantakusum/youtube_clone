@@ -3,6 +3,19 @@ node_modules/
 frontend/node_modules/
 backend/node_modules/
 
+#public
+backend/public/big_buck_bunny
+backend/public/hls
+backend/public/live
+backend/public/live2
+backend/public/live3
+backend/public/live4
+backend/public/thumbnail
+backend/public/videos
+backend/public/big_buck_bunny.mp4
+
+frontend/public/
+
 # Build folders
 dist/
 dist-ssr/
